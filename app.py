@@ -52,7 +52,7 @@ Animals = [
 
 @app.route('/', methods=['GET'])
 def home():
-    return ("<h1>Welcome to the <i>Animal Shop</i></h1> <p>Browse our <a href='/api/stock'>stock</a></p> <p>Our most expensive <a href='/api?id=3'>Animal!</a></p> <p>Our cheapest <a href='/api/somearea?price=2'>Animal</a> for you peasants</p>")
+    return ("<h1>Welcome to the Animal Shop!</h1> <p>Browse our <a href='/api/stock'>stock</a></p> <p>Our most expensive <a href='/api?id=3'>Animal!</a></p> <p>Our cheapest <a href='/api/somearea?price=2'>Animal</a> for you peasants</p>")
 
 @app.route('/api/stock', methods=['GET'])
 def api_all():
