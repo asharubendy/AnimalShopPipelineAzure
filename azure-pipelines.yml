@@ -1,28 +1,13 @@
-# Python to Linux Web App on Azure
-# Build your Python project and deploy it to Azure as a Linux Web App.
-# Change python version to one thats appropriate for your application.
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
 - main
 
 variables:
-  # Azure Resource Manager connection created during pipeline creation
-  azureServiceConnectionId: 'dceef646-b138-42d4-b7db-6cdecff07420'
-
-  # Web app name
-  webAppName: 'ShopApiED'
-
-  # Agent VM image name
+  azureServiceConnectionId: 'aa8b7018-f28b-4433-9efc-6c7f490fc7bc'
+  webAppName: 'TSItestpipeline'
   vmImageName: 'ubuntu-latest'
-
-  # Environment name
-  environmentName: 'ShopApiED'
-
-  # Project root folder. Point to the folder containing manage.py file.
+  environmentName: 'TSItestpipeline'
   projectRoot: $(System.DefaultWorkingDirectory)
-
-  # Python version: 3.7
   pythonVersion: '3.7'
 
 stages:
@@ -47,6 +32,27 @@ stages:
       workingDirectory: $(projectRoot)
       displayName: "Install requirements"
 
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'sonarcloud'
+        organization: 'asharubendy-1'
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: 'Asharubendy_Test'
+        cliProjectName: 'Test'
+        cliSources: '.'
+        
+        extraProperties: |
+          sonar.c.file.suffixes=-
+          sonar.cpp.file.suffixes=-
+          sonar.objc.file.suffixes=-
+        
+
+    - task: SonarCloudAnalyze@1
+    - task: PyLint@0
+      inputs:
+        modules: 'main.py'
+    
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
@@ -59,5 +65,4 @@ stages:
     - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       displayName: 'Upload package'
       artifact: drop
-      
-      
+
